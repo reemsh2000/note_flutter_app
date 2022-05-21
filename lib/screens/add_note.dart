@@ -165,6 +165,7 @@ class _AddNoteState extends State<AddNote> {
                               title: _titleController.text,
                               description: _descriptionController.text,
                               noteColor: noteColor));
+                          await widget.refresh();
                           Navigator.pop(context);
                         },
                       ),

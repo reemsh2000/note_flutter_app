@@ -6,8 +6,8 @@ import 'package:reem_notes/db/db_helper.dart';
 class AddNote extends StatefulWidget {
   final Note? note;
   final Function? onDelete;
-  final Function refresh ;
-  const AddNote({this.note, this.onDelete ,required this.refresh});
+  final Function refresh;
+  const AddNote({this.note, this.onDelete, required this.refresh});
 
   @override
   State<AddNote> createState() => _AddNoteState();
@@ -77,12 +77,18 @@ class _AddNoteState extends State<AddNote> {
                 Navigator.pop(context);
               }),
         ],
-        title: const Center(
-            child: Text('New Note',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white))),
+        title: Center(
+            child: widget.note != null
+                ? const Text('New Note',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white))
+                : const Text('Edit Note',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white))),
       ),
       body: SingleChildScrollView(
         child: Column(children: [

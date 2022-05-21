@@ -21,7 +21,7 @@ class _WelcomeState extends State<Welcome> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 1), () {
+    Timer(const Duration(seconds: 5), () {
       navigateHome(context);
     });
   }

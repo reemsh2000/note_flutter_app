@@ -1,16 +1,34 @@
 # reem_notes
 
-A new Flutter project.
+A Flutter project.
 
-## Getting Started
+## Purpose: :bulb:
 
-This project is a starting point for a Flutter application.
+a mobile app that helps you to organize your notes.
 
-A few resources to get you started if this is your first Flutter project:
+----------------------------
+## Description
+  this app contains three pages:
+* First page: lanch screen (to say welcome for you !)
+* Second page: The user can add a new note by pressing into plus button or deleting existing notes.
+* Third page: The user can add a new note (add note title, note description, and change note color).
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+---------------------------
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## User Stories :open_book:
+    - As a user, I can add a new note.
+    - As a user, I can edit existing notes.
+    - As a user, I can duplicate existing notes.
+    - As a user, I can delete notes.
+    - As a user, I can change note color.
+
+--------------------------
+## Installing the project locally: :arrow_down: 
+    1- clone repo 
+    2- start dubugging 
+-------------------
+## Tech Stack : :clipboard: 
+* Flutter 
+* Sqlite
+* dart
+

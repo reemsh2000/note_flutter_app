@@ -1,4 +1,4 @@
-# reem_notes
+# Flutter Notes App
 
 A Flutter project.
 

@@ -79,12 +79,12 @@ class _AddNoteState extends State<AddNote> {
         ],
         title: Center(
             child: widget.note != null
-                ? const Text('New Note',
+                ? const Text('Edit Note',
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white))
-                : const Text('Edit Note',
+                : const Text('New Note',
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

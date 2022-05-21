@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:reem_notes/db/my_colors.dart';
 import 'package:reem_notes/db/note.dart';
-import 'package:reem_notes/db/note_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:reem_notes/db/db_helper.dart';
 
 class AddNote extends StatefulWidget {
   final Note? note;
-  const AddNote({this.note});
+  final Function? onDelete;
+  final Function refresh ;
+  const AddNote({this.note, this.onDelete ,required this.refresh});
 
   @override
   State<AddNote> createState() => _AddNoteState();
@@ -15,14 +16,27 @@ class AddNote extends StatefulWidget {
 class _AddNoteState extends State<AddNote> {
   late TextEditingController _titleController = TextEditingController();
   late TextEditingController _descriptionController = TextEditingController();
+  static var db = DBHelper.dbHelper;
   bool editMode = false;
   int noteColor = 0xff1321E0;
   String title = "";
   String description = "";
-
-  List<Map<String, dynamic>> _newItem = [];
-
-  bool _isLoading = true;
+  Future<void> insertUpdate() async {
+    if (widget.note != null) {
+      await db.updateNote(
+        Note(
+            title: _titleController.text,
+            description: _descriptionController.text,
+            noteColor: noteColor),
+        widget.note?.id,
+      );
+    } else {
+      await db.insertNewNote(Note(
+          title: _titleController.text,
+          description: _descriptionController.text,
+          noteColor: noteColor));
+    }
+  }
 
   @override
   void initState() {
@@ -30,6 +44,7 @@ class _AddNoteState extends State<AddNote> {
     _titleController = TextEditingController(text: widget.note?.title);
     _descriptionController =
         TextEditingController(text: widget.note?.description);
+    noteColor = widget.note?.noteColor ?? 0xff1321E0;
   }
 
   @override
@@ -43,7 +58,10 @@ class _AddNoteState extends State<AddNote> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         backgroundColor: Color(noteColor),
         actions: [
           IconButton(
@@ -54,7 +72,8 @@ class _AddNoteState extends State<AddNote> {
           IconButton(
               icon: const Icon(Icons.check),
               onPressed: () async {
-                await performSave();
+                await insertUpdate();
+                await widget.refresh();
                 Navigator.pop(context);
               }),
         ],
@@ -122,15 +141,26 @@ class _AddNoteState extends State<AddNote> {
                         title: Text('Share with your friends',
                             style: TextStyle(color: Colors.white)),
                       ),
-                      const ListTile(
-                        leading: Icon(Icons.delete, color: Colors.white),
-                        title: Text('Delete',
+                      ListTile(
+                        leading: const Icon(Icons.delete, color: Colors.white),
+                        title: const Text('Delete',
                             style: TextStyle(color: Colors.white)),
+                        onTap: () async {
+                          await widget.onDelete!(widget.note?.id);
+                          Navigator.pop(context);
+                        },
                       ),
-                      const ListTile(
-                        leading: Icon(Icons.copy, color: Colors.white),
-                        title: Text('Duplicate',
+                      ListTile(
+                        leading: const Icon(Icons.copy, color: Colors.white),
+                        title: const Text('Duplicate',
                             style: TextStyle(color: Colors.white)),
+                        onTap: () async {
+                          await db.insertNewNote(Note(
+                              title: _titleController.text,
+                              description: _descriptionController.text,
+                              noteColor: noteColor));
+                          Navigator.pop(context);
+                        },
                       ),
                       SizedBox(
                         height: 40,
@@ -165,52 +195,5 @@ class _AddNoteState extends State<AddNote> {
         ]),
       ),
     );
-  }
-
-  Future<void> performSave() async {
-    if (checkData()) {
-      await save();
-    }
-  }
-
-  bool checkData() {
-    if (_titleController.text.isNotEmpty &&
-        _descriptionController.text.isNotEmpty) {
-      return true;
-    }
-
-    return false;
-  }
-
-  Future<void> save() async {
-    bool created = await Provider.of<NoteProvider>(context, listen: false)
-        .create(note: note);
-    if (created) clear();
-  }
-
-  // Future<void> updateColor() async {
-  //   bool updated =
-  //       await Provider.of<NoteProvider>(context, listen: false).update(note);
-  //   if (updated) clear();
-  //   String message =
-  //       updated ? 'Note updated successfully' : 'Failed to updated Note';
-  //   showSnackBar(context: context, message: message, error: !updated);
-  // }
-
-  Note get note {
-    Note note = Note();
-    note.title = _titleController.text;
-    note.description = _descriptionController.text;
-    note.noteColor = noteColor;
-    return note;
-  }
-
-  void clear() {
-    _titleController.text = '';
-    _descriptionController.text = '';
-  }
-
-  Future<void> delete(int id) async {
-    await Provider.of<NoteProvider>(context, listen: false).delete(id);
   }
 }
